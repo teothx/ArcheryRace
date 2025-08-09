@@ -16,12 +16,16 @@ import 'package:arrowclash/screens/stats_screen.dart';
 import 'package:arrowclash/screens/profile_screen.dart';
 import 'package:arrowclash/screens/settings_screen.dart';
 
-void main() {
-  runApp(const ArcheryRaceApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final String languageCode = await AppLocalizations.getLocale() ?? 'en';
+  runApp(ArrowClashApp(languageCode: languageCode));
 }
 
-class ArcheryRaceApp extends StatelessWidget {
-  const ArcheryRaceApp({Key? key}) : super(key: key);
+class ArrowClashApp extends StatelessWidget {
+  final String languageCode;
+  
+  const ArrowClashApp({Key? key, required this.languageCode}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +55,7 @@ class ArcheryRaceApp extends StatelessWidget {
           Locale('en'),
           Locale('it'),
         ],
-        locale: const Locale('en'),
+        locale: Locale(languageCode),
         initialRoute: '/',
         routes: {
           '/': (context) => const SplashScreen(),
