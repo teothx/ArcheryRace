@@ -1,0 +1,135 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:archery_race/bloc/game_bloc.dart';
+import 'package:archery_race/models/game_models.dart';
+
+class GameRulesScreen extends StatelessWidget {
+  const GameRulesScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final String? gameType = ModalRoute.of(context)?.settings.arguments as String?;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_getGameTitle(gameType)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${_getGameTitle(gameType)} - Rules',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                child: _buildRulesContent(gameType),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Back'),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      BlocProvider.of<GameBloc>(context).add(
+                        InitializeGame(gameType: _getGameTypeEnum(gameType)),
+                      );
+                      Navigator.of(context).pushReplacementNamed('/game_setup');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Start Game'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getGameTitle(String? gameType) {
+    switch (gameType) {
+      case 'duo':
+        return 'Archery Duo Challenge';
+      case 'classica':
+        return 'La Classica';
+      case 'bull':
+        return 'Bull\'s Revenge';
+      case 'impact':
+        return 'Red Impact';
+      case 'solo':
+        return '18m Singolo';
+      default:
+        return 'Game Rules';
+    }
+  }
+
+  GameType _getGameTypeEnum(String? gameType) {
+    switch (gameType) {
+      case 'duo':
+        return GameType.duo;
+      case 'classica':
+        return GameType.classica;
+      case 'bull':
+        return GameType.bull;
+      case 'impact':
+        return GameType.impact;
+      case 'solo':
+        return GameType.solo;
+      default:
+        return GameType.classica;
+    }
+  }
+
+  Widget _buildRulesContent(String? gameType) {
+    final gameTypeEnum = _getGameTypeEnum(gameType);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Rules:',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(gameTypeEnum.rules),
+      ],
+    );
+  }
+}
