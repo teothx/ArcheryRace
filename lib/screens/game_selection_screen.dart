@@ -7,7 +7,7 @@ class GameSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Game Selection'),
+        title: const Text('Selezione Gioco'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -21,7 +21,7 @@ class GameSelectionScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Select a Game Mode',
+              'Seleziona una Modalità di Gioco',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

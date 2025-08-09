@@ -1,7 +1,7 @@
 // This is a placeholder for widget tests
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:archery_race/main.dart';
+import 'package:arrowclash/main.dart';
 
 void main() {
   testWidgets('App loads correctly', (WidgetTester tester) async {

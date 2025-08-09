@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:archery_race/bloc/game_bloc.dart';
-import 'package:archery_race/models/game_models.dart';
+import 'package:arrowclash/bloc/game_bloc.dart';
+import 'package:arrowclash/models/game_models.dart';
 
 class GameSetupScreen extends StatefulWidget {
   const GameSetupScreen({Key? key}) : super(key: key);
@@ -93,9 +93,9 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
             builder: (context, state) {
               if (state is GameSetup) {
                 _isSoloGame = state.gameType == GameType.solo;
-                return Text('Setup Tournament - ${_getGameTitle(state.gameType)}');
+                return Text('Impostazione Torneo - ${_getGameTitle(state.gameType)}');
               }
-              return const Text('Setup Tournament');
+              return const Text('Impostazione Torneo');
             },
           ),
           leading: IconButton(
@@ -121,7 +121,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Step 1: Game Configuration',
+          'Passo 1: Configurazione Gioco',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -131,18 +131,18 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
         TextFormField(
           controller: _numParticipantsController,
           decoration: const InputDecoration(
-            labelText: 'Number of Teams/Participants',
+            labelText: 'Numero di Squadre/Partecipanti',
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.group),
           ),
           keyboardType: TextInputType.number,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter a number';
+              return 'Inserisci un numero';
             }
             final number = int.tryParse(value);
             if (number == null || number < 1 || number > 20) {
-              return 'Please enter a number between 1 and 20';
+              return 'Inserisci un numero tra 1 e 20';
             }
             return null;
           },
@@ -151,21 +151,21 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
         TextFormField(
           controller: _numVolleysController,
           decoration: const InputDecoration(
-            labelText: 'Number of Volleys',
+            labelText: 'Numero di Volée',
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.repeat),
           ),
           keyboardType: TextInputType.number,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter a number';
+              return 'Inserisci un numero';
             }
             final number = int.tryParse(value);
             if (number == null || number < 2 || number > 10) {
-              return 'Please enter a number between 2 and 10';
+              return 'Inserisci un numero tra 2 e 10';
             }
             if (number % 2 != 0) {
-              return 'Please enter an even number';
+              return 'Inserisci un numero pari';
             }
             return null;
           },
@@ -181,7 +181,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: const Text('Confirm'),
+            child: const Text('Conferma'),
           ),
         ),
       ],
@@ -204,7 +204,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
             ),
             const SizedBox(width: 8),
             const Text(
-              'Step 2: Enter Names',
+              'Passo 2: Inserisci Nomi',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -222,13 +222,13 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
                 child: TextFormField(
                   controller: _nameControllers[index],
                   decoration: InputDecoration(
-                    labelText: '${_isSoloGame ? "Archer" : "Team"} ${index + 1}',
+                    labelText: '${_isSoloGame ? "Arciere" : "Squadra"} ${index + 1}',
                     border: const OutlineInputBorder(),
                     prefixIcon: Icon(_isSoloGame ? Icons.person : Icons.group),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a name';
+                      return 'Inserisci un nome';
                     }
                     return null;
                   },
@@ -248,7 +248,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: const Text('Confirm Names'),
+            child: const Text('Conferma Nomi'),
           ),
         ),
       ],

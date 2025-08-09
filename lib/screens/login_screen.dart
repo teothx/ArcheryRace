@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:archery_race/bloc/auth_bloc.dart';
+import 'package:arrowclash/bloc/auth_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       // App Logo or Name
                       const Text(
-                        'Archery Race',
+                        'ArrowClash',
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           GestureDetector(
                             onTap: () => setState(() => _isLogin = true),
                             child: Text(
-                              'Login',
+                              'Accedi',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: _isLogin ? FontWeight.bold : FontWeight.normal,
@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           GestureDetector(
                             onTap: () => setState(() => _isLogin = false),
                             child: Text(
-                              'Register',
+                              'Registrati',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: !_isLogin ? FontWeight.bold : FontWeight.normal,
@@ -119,13 +119,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           controller: _nameController,
                           decoration: const InputDecoration(
-                            labelText: 'Name',
+                            labelText: 'Nome',
                             border: OutlineInputBorder(),
                             prefixIcon: Icon(Icons.person),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your name';
+                              return 'Inserisci il tuo nome';
                             }
                             return null;
                           },
@@ -142,10 +142,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return 'Inserisci la tua email';
                           }
                           if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                            return 'Please enter a valid email';
+                            return 'Inserisci un\'email valida';
                           }
                           return null;
                         },
@@ -172,10 +172,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         obscureText: _obscurePassword,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return 'Inserisci la tua password';
                           }
                           if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
+                            return 'La password deve essere di almeno 6 caratteri';
                           }
                           return null;
                         },
@@ -198,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             child: Text(
-                              _isLogin ? 'Login' : 'Register',
+                              _isLogin ? 'Accedi' : 'Registrati',
                               style: const TextStyle(fontSize: 18),
                             ),
                           );

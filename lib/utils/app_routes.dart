@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:archery_race/screens/splash_screen.dart';
-import 'package:archery_race/screens/login_screen.dart';
-import 'package:archery_race/screens/home_screen.dart';
-import 'package:archery_race/screens/game_selection_screen.dart';
-import 'package:archery_race/screens/game_rules_screen.dart';
-import 'package:archery_race/screens/game_setup_screen.dart';
-import 'package:archery_race/screens/game_screen.dart';
-import 'package:archery_race/screens/results_screen.dart';
-import 'package:archery_race/screens/stats_screen.dart';
+import 'package:arrowclash/screens/splash_screen.dart';
+import 'package:arrowclash/screens/login_screen.dart';
+import 'package:arrowclash/screens/home_screen.dart';
+import 'package:arrowclash/screens/game_selection_screen.dart';
+import 'package:arrowclash/screens/game_rules_screen.dart';
+import 'package:arrowclash/screens/game_setup_screen.dart';
+import 'package:arrowclash/screens/game_screen.dart';
+import 'package:arrowclash/screens/results_screen.dart';
+import 'package:arrowclash/screens/stats_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';

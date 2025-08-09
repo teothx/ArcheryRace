@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:archery_race/bloc/auth_bloc.dart';
+import 'package:arrowclash/bloc/auth_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -73,7 +73,7 @@ class _StatsScreenState extends State<StatsScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Statistics'),
+          title: const Text('Statistiche'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -110,7 +110,7 @@ class _StatsScreenState extends State<StatsScreen> {
           ),
           const SizedBox(height: 16),
           const Text(
-            'No game history available',
+            'Nessuna cronologia di giochi disponibile',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -118,7 +118,7 @@ class _StatsScreenState extends State<StatsScreen> {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Play some games to see your statistics here',
+            'Gioca qualche partita per vedere le tue statistiche qui',
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey,
@@ -129,7 +129,7 @@ class _StatsScreenState extends State<StatsScreen> {
             onPressed: () {
               Navigator.of(context).pushReplacementNamed('/home');
             },
-            child: const Text('Play a Game'),
+            child: const Text('Gioca una Partita'),
           ),
         ],
       ),
@@ -169,7 +169,7 @@ class _StatsScreenState extends State<StatsScreen> {
       children: [
         Expanded(
           child: _buildStatCard(
-            title: 'Total Games',
+            title: 'Partite Totali',
             value: totalGames.toString(),
             icon: Icons.sports_score,
             color: Colors.blue,
@@ -178,7 +178,7 @@ class _StatsScreenState extends State<StatsScreen> {
         const SizedBox(width: 16),
         Expanded(
           child: _buildStatCard(
-            title: 'Game Types',
+            title: 'Tipi di Gioco',
             value: gameTypes.length.toString(),
             icon: Icons.category,
             color: Colors.green,
@@ -187,7 +187,7 @@ class _StatsScreenState extends State<StatsScreen> {
         const SizedBox(width: 16),
         Expanded(
           child: _buildStatCard(
-            title: 'Most Played',
+            title: 'Più Giocato',
             value: mostPlayedGameType,
             icon: Icons.star,
             color: Colors.orange,
@@ -318,7 +318,7 @@ class _StatsScreenState extends State<StatsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Game Type Distribution',
+          'Distribuzione Tipi di Gioco',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -355,7 +355,7 @@ class _StatsScreenState extends State<StatsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Recent Games',
+          'Partite Recenti',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -406,7 +406,7 @@ class _StatsScreenState extends State<StatsScreen> {
             Text('Date: ${_formatDate(game['date']?.toString() ?? '')}'),
             const SizedBox(height: 16),
             const Text(
-              'Participants:',
+              'Partecipanti:',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
@@ -420,7 +420,7 @@ class _StatsScreenState extends State<StatsScreen> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Close'),
+            child: const Text('Chiudi'),
           ),
         ],
       ),
@@ -432,7 +432,7 @@ class _StatsScreenState extends State<StatsScreen> {
     final totals = game['totals'] as Map?;
     
     if (participants == null || totals == null) {
-      return [const Text('No score data available')];
+      return [const Text('Nessun dato di punteggio disponibile')];
     }
     
     return participants.map((participant) {

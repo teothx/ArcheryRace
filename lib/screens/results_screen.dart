@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:archery_race/bloc/game_bloc.dart';
-import 'package:archery_race/bloc/auth_bloc.dart';
-import 'package:archery_race/models/game_models.dart';
+import 'package:arrowclash/bloc/game_bloc.dart';
+import 'package:arrowclash/bloc/auth_bloc.dart';
+import 'package:arrowclash/models/game_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -55,7 +55,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Game Results'),
+          title: const Text('Risultati Gioco'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -96,7 +96,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: const Text('Back to Home'),
+                            child: const Text('Torna alla Home'),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -112,7 +112,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: const Text('Save Results'),
+                            child: const Text('Salva Risultati'),
                           ),
                         ),
                       ],
@@ -145,7 +145,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${_getGameTitle(state.gameType)} - Final Results',
+            '${_getGameTitle(state.gameType)} - Risultati Finali',
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -160,19 +160,19 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 columns: const [
                   DataColumn(
                     label: Text(
-                      'Rank',
+                      'Posizione',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                   DataColumn(
                     label: Text(
-                      'Name',
+                      'Nome',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                   DataColumn(
                     label: Text(
-                      'Total',
+                      'Totale',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -204,7 +204,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Score Evolution',
+            'Evoluzione Punteggio',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -229,7 +229,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        return Text('Volley ${value.toInt() + 1}');
+                        return Text('Volée ${value.toInt() + 1}');
                       },
                     ),
                   ),
@@ -307,8 +307,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Results Saved'),
-        content: const Text('Game results have been saved successfully.'),
+        title: const Text('Risultati Salvati'),
+        content: const Text('I risultati del gioco sono stati salvati con successo.'),
         actions: [
           TextButton(
             onPressed: () {

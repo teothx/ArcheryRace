@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:archery_race/bloc/auth_bloc.dart';
+import 'package:arrowclash/bloc/auth_bloc.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class SplashScreen extends StatelessWidget {
             children: [
               // Logo or App Name
               const Text(
-                'Archery Race',
+                'Gara di Tiro con l\'Arco',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -34,7 +34,7 @@ class SplashScreen extends StatelessWidget {
               const CircularProgressIndicator(),
               const SizedBox(height: 20),
               const Text(
-                'Loading...',
+                'Caricamento...',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:archery_race/bloc/auth_bloc.dart';
+import 'package:arrowclash/bloc/auth_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -34,11 +34,12 @@ class ProfileScreen extends StatelessWidget {
         body: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is Authenticated) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                     // Profile header
                     const Center(
                       child: Column(
@@ -46,6 +47,7 @@ class ProfileScreen extends StatelessWidget {
                           CircleAvatar(
                             radius: 50,
                             backgroundColor: Colors.blue,
+                            backgroundImage: AssetImage('assets/images/default_profile.png'),
                             child: Icon(
                               Icons.person,
                               size: 50,
@@ -205,7 +207,8 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              );
+              ),
+            );
             }
             return const Center(
               child: CircularProgressIndicator(),

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:archery_race/bloc/auth_bloc.dart';
-import 'package:archery_race/bloc/game_bloc.dart';
-import 'package:archery_race/screens/splash_screen.dart';
-import 'package:archery_race/screens/login_screen.dart';
-import 'package:archery_race/screens/home_screen.dart';
-import 'package:archery_race/screens/game_selection_screen.dart';
-import 'package:archery_race/screens/game_rules_screen.dart';
-import 'package:archery_race/screens/game_setup_screen.dart';
-import 'package:archery_race/screens/game_screen.dart';
-import 'package:archery_race/screens/results_screen.dart';
-import 'package:archery_race/screens/stats_screen.dart';
-import 'package:archery_race/screens/profile_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:arrowclash/bloc/auth_bloc.dart';
+import 'package:arrowclash/bloc/game_bloc.dart';
+import 'package:arrowclash/utils/app_localizations.dart';
+import 'package:arrowclash/screens/splash_screen.dart';
+import 'package:arrowclash/screens/login_screen.dart';
+import 'package:arrowclash/screens/home_screen.dart';
+import 'package:arrowclash/screens/game_selection_screen.dart';
+import 'package:arrowclash/screens/game_rules_screen.dart';
+import 'package:arrowclash/screens/game_setup_screen.dart';
+import 'package:arrowclash/screens/game_screen.dart';
+import 'package:arrowclash/screens/results_screen.dart';
+import 'package:arrowclash/screens/stats_screen.dart';
+import 'package:arrowclash/screens/profile_screen.dart';
+import 'package:arrowclash/screens/settings_screen.dart';
 
 void main() {
   runApp(const ArcheryRaceApp());
@@ -32,12 +35,23 @@ class ArcheryRaceApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Archery Race',
+        title: 'ArrowClash',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           fontFamily: 'Roboto',
         ),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('it'),
+        ],
+        locale: const Locale('en'),
         initialRoute: '/',
         routes: {
           '/': (context) => const SplashScreen(),
@@ -50,6 +64,7 @@ class ArcheryRaceApp extends StatelessWidget {
           '/results': (context) => const ResultsScreen(),
           '/stats': (context) => const StatsScreen(),
           '/profile': (context) => const ProfileScreen(),
+          '/settings': (context) => const SettingsScreen(),
         },
       ),
     );

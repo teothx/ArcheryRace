@@ -1,8 +1,9 @@
 // App constants
+import 'package:flutter/material.dart';
 
 class AppConstants {
   // App information
-  static const String appName = 'Archery Race';
+  static const String appName = 'ArrowClash';
   static const String appVersion = '1.0.0';
   
   // SharedPreferences keys
@@ -67,22 +68,22 @@ class AppConstants {
   
   // Game type specific messages
   static const Map<String, String> gameTypeMessages = {
-    'duo': 'Mixed team: beginner + veteran',
-    'classica': 'Classic archery game',
-    'bull': 'Bull\'s eye challenge',
-    'impact': 'Target impact game',
-    'solo': 'Individual 18m game',
+    'duo': 'Squadra mista: principiante + veterano',
+    'classica': 'Gioco classico di tiro con l\'arco',
+    'bull': 'Sfida al centro del bersaglio',
+    'impact': 'Gioco di impatto sul bersaglio',
+    'solo': 'Gioco individuale 18m',
   };
   
   // Error messages
-  static const String networkError = 'Network error occurred. Please try again.';
-  static const String authenticationError = 'Authentication failed. Please check your credentials.';
-  static const String unknownError = 'An unknown error occurred. Please try again.';
-  static const String noDataError = 'No data available.';
+  static const String networkError = 'Errore di rete. Riprova più tardi.';
+  static const String authenticationError = 'Autenticazione fallita. Controlla le tue credenziali.';
+  static const String unknownError = 'Si è verificato un errore sconosciuto. Riprova.';
+  static const String noDataError = 'Nessun dato disponibile.';
   
   // Success messages
-  static const String loginSuccess = 'Login successful!';
-  static const String registrationSuccess = 'Registration successful!';
-  static const String gameSavedSuccess = 'Game results saved successfully!';
-  static const String logoutSuccess = 'You have been logged out successfully!';
+  static const String loginSuccess = 'Login effettuato con successo!';
+  static const String registrationSuccess = 'Registrazione completata con successo!';
+  static const String gameSavedSuccess = 'Risultati del gioco salvati con successo!';
+  static const String logoutSuccess = 'Sei stato disconnesso con successo!';
 }

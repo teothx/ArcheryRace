@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:archery_race/bloc/auth_bloc.dart';
+import 'package:arrowclash/bloc/auth_bloc.dart';
+import 'package:arrowclash/utils/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,10 +16,11 @@ class HomeScreen extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Archery Race'),
+          title: Text(AppLocalizations.of(context)!.appName),
           actions: [
             BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
+                final localizations = AppLocalizations.of(context)!;
                 if (state is Authenticated) {
                   return PopupMenuButton<String>(
                     onSelected: (value) {
@@ -28,21 +30,27 @@ class HomeScreen extends StatelessWidget {
                         Navigator.of(context).pushNamed('/stats');
                       } else if (value == 'profile') {
                         Navigator.of(context).pushNamed('/profile');
+                      } else if (value == 'settings') {
+                        Navigator.of(context).pushNamed('/settings');
                       }
                     },
                     itemBuilder: (BuildContext context) {
                       return [
-                        const PopupMenuItem<String>(
+                        PopupMenuItem<String>(
                           value: 'profile',
-                          child: Text('Profile'),
+                          child: Text(localizations.profile),
                         ),
-                        const PopupMenuItem<String>(
+                        PopupMenuItem<String>(
                           value: 'stats',
-                          child: Text('Statistics'),
+                          child: Text(localizations.statistics),
                         ),
-                        const PopupMenuItem<String>(
+                        PopupMenuItem<String>(
+                          value: 'settings',
+                          child: Text(localizations.appSettings),
+                        ),
+                        PopupMenuItem<String>(
                           value: 'logout',
-                          child: Text('Logout'),
+                          child: Text(localizations.logout),
                         ),
                       ];
                     },
@@ -63,7 +71,7 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     // Welcome message
                     Text(
-                      'Welcome, ${state.name}!',
+                      AppLocalizations.of(context)!.welcome(state.name),
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -79,9 +87,9 @@ class HomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 30),
                     // Game selection title
-                    const Text(
-                      'Select a Game Mode',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.selectAGameMode,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -97,7 +105,7 @@ class HomeScreen extends StatelessWidget {
                           _buildGameCard(
                             context,
                             title: 'Archery Duo Challenge',
-                            description: 'Mixed team: beginner + veteran',
+                            description: AppLocalizations.of(context)!.gameTypeDuo,
                             icon: Icons.people,
                             color: Colors.blue,
                             gameType: 'duo',
@@ -105,7 +113,7 @@ class HomeScreen extends StatelessWidget {
                           _buildGameCard(
                             context,
                             title: 'La Classica',
-                            description: 'Classic archery game',
+                            description: AppLocalizations.of(context)!.gameTypeClassica,
                             icon: Icons.sports,
                             color: Colors.green,
                             gameType: 'classica',
@@ -113,7 +121,7 @@ class HomeScreen extends StatelessWidget {
                           _buildGameCard(
                             context,
                             title: 'Bull\'s Revenge',
-                            description: 'Bull\'s eye challenge',
+                            description: AppLocalizations.of(context)!.gameTypeBull,
                             icon: Icons.track_changes,
                             color: Colors.red,
                             gameType: 'bull',
@@ -121,7 +129,7 @@ class HomeScreen extends StatelessWidget {
                           _buildGameCard(
                             context,
                             title: 'Red Impact',
-                            description: 'Target impact game',
+                            description: AppLocalizations.of(context)!.gameTypeImpact,
                             icon: Icons.center_focus_strong,
                             color: Colors.orange,
                             gameType: 'impact',
@@ -129,7 +137,7 @@ class HomeScreen extends StatelessWidget {
                           _buildGameCard(
                             context,
                             title: '18m Singolo',
-                            description: 'Individual 18m game',
+                            description: AppLocalizations.of(context)!.gameTypeSolo,
                             icon: Icons.person,
                             color: Colors.purple,
                             gameType: 'solo',

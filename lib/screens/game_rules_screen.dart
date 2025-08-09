@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:archery_race/bloc/game_bloc.dart';
-import 'package:archery_race/models/game_models.dart';
+import 'package:arrowclash/bloc/game_bloc.dart';
+import 'package:arrowclash/models/game_models.dart';
+import 'package:arrowclash/utils/app_localizations.dart';
 
 class GameRulesScreen extends StatelessWidget {
   const GameRulesScreen({Key? key}) : super(key: key);
@@ -9,6 +10,7 @@ class GameRulesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? gameType = ModalRoute.of(context)?.settings.arguments as String?;
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -26,7 +28,7 @@ class GameRulesScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${_getGameTitle(gameType)} - Rules',
+              '${_getGameTitle(gameType)} - ${localizations.rules}',
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -35,7 +37,7 @@ class GameRulesScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Expanded(
               child: SingleChildScrollView(
-                child: _buildRulesContent(gameType),
+                child: _buildRulesContent(gameType, localizations),
               ),
             ),
             const SizedBox(height: 20),
@@ -52,7 +54,7 @@ class GameRulesScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Back'),
+                    child: Text(localizations.back),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -70,7 +72,7 @@ class GameRulesScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Start Game'),
+                    child: Text(localizations.startGame),
                   ),
                 ),
               ],
@@ -115,14 +117,14 @@ class GameRulesScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildRulesContent(String? gameType) {
+  Widget _buildRulesContent(String? gameType, AppLocalizations localizations) {
     final gameTypeEnum = _getGameTypeEnum(gameType);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Rules:',
-          style: TextStyle(
+        Text(
+          '${localizations.rules}:',
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),

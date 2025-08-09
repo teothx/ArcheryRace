@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:archery_race/models/game_models.dart';
+import 'package:arrowclash/models/game_models.dart';
 
 // Events
 abstract class GameEvent extends Equatable {
@@ -180,7 +180,17 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   ) {
     emit(GameLoading());
     try {
-      final currentState = state as GameSetup;
+      GameType gameType;
+      
+      // Check if current state is GameSetup
+      if (state is GameSetup) {
+        final currentState = state as GameSetup;
+        gameType = currentState.gameType;
+      } else {
+        // If not in GameSetup state, use a default game type
+        gameType = GameType.classica;
+      }
+      
       final scores = <String, List<int>>{};
       final totals = <String, int>{};
 
@@ -190,7 +200,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       }
 
       emit(GameInProgress(
-        gameType: currentState.gameType,
+        gameType: gameType,
         scores: scores,
         totals: totals,
         currentVolley: 1,

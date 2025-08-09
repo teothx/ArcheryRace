@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:archery_race/bloc/game_bloc.dart';
-import 'package:archery_race/models/game_models.dart';
+import 'package:arrowclash/bloc/game_bloc.dart';
+import 'package:arrowclash/models/game_models.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -59,7 +59,7 @@ class _GameScreenState extends State<GameScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Please select all scores'),
+            content: Text('Seleziona tutti i punteggi'),
             backgroundColor: Colors.red,
           ),
         );
@@ -90,9 +90,9 @@ class _GameScreenState extends State<GameScreen> {
           title: BlocBuilder<GameBloc, GameState>(
             builder: (context, state) {
               if (state is GameInProgress) {
-                return Text('Volley ${state.currentVolley} - ${_getGameTitle(state.gameType)}');
+                return Text('Volée ${state.currentVolley} - ${_getGameTitle(state.gameType)}');
               }
-              return const Text('Game in Progress');
+              return const Text('Gioco in Corso');
             },
           ),
           leading: IconButton(
@@ -128,7 +128,7 @@ class _GameScreenState extends State<GameScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: const Text('Validate Volley'),
+                        child: const Text('Valida Volée'),
                       ),
                     ),
                   ),
@@ -156,7 +156,7 @@ class _GameScreenState extends State<GameScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Current: $currentParticipant',
+            'Attuale: $currentParticipant',
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -164,7 +164,7 @@ class _GameScreenState extends State<GameScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Current Total: $currentTotal',
+            'Punteggio Attuale: $currentTotal',
             style: const TextStyle(
               fontSize: 16,
             ),
@@ -181,8 +181,8 @@ class _GameScreenState extends State<GameScreen> {
       case GameType.duo:
         return Text(
           state.currentVolley % 2 == 1
-              ? 'Odd Volley - Divisive'
-              : 'Even Volley - Multiplier',
+              ? 'Volée Dispari - Divisivo'
+              : 'Volée Pari - Moltiplicatore',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: state.currentVolley % 2 == 1 ? Colors.red : Colors.green,
@@ -191,8 +191,8 @@ class _GameScreenState extends State<GameScreen> {
       case GameType.bull:
         return Text(
           state.currentVolley % 2 == 1
-              ? 'Archer A 3 arrows - Archer B the Bull'
-              : 'Archer B 3 arrows - Archer A the Bull',
+              ? 'Arciere A 3 frecce - Arciere B il Centro'
+              : 'Arciere B 3 frecce - Arciere A il Centro',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.blue,
@@ -201,8 +201,8 @@ class _GameScreenState extends State<GameScreen> {
       case GameType.impact:
         return Text(
           state.currentVolley % 2 == 1
-              ? 'Archer A 3 arrows - Archer B target'
-              : 'Archer B 3 arrows - Archer A target',
+              ? 'Arciere A 3 frecce - Arciere B bersaglio'
+              : 'Arciere B 3 frecce - Arciere A bersaglio',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.orange,
@@ -211,7 +211,7 @@ class _GameScreenState extends State<GameScreen> {
       case GameType.classica:
       case GameType.solo:
         return const Text(
-          'Standard scoring',
+          'Punteggio standard',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.green,
@@ -227,7 +227,7 @@ class _GameScreenState extends State<GameScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Select Scores:',
+            'Seleziona Punteggi:',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -255,7 +255,7 @@ class _GameScreenState extends State<GameScreen> {
                     const SizedBox(height: 8),
                     DropdownButton<int>(
                       value: _scoreSelections[arrowIndex] ? _selectedScores[arrowIndex] : null,
-                      hint: const Text('Score'),
+                      hint: const Text('Punteggio'),
                       items: List.generate(11, (index) {
                         final score = index == 10 ? 0 : 10 - index; // 10, 9, ..., 1, 0 (M)
                         final label = score == 0 ? 'M' : score.toString();
@@ -285,15 +285,15 @@ class _GameScreenState extends State<GameScreen> {
     
     switch (gameType) {
       case GameType.duo:
-        return arrowIndex < 3 ? 'Arrow $arrowNumber' : 'Special';
+        return arrowIndex < 3 ? 'Freccia $arrowNumber' : 'Speciale';
       case GameType.classica:
-        return 'Arrow $arrowNumber';
+        return 'Freccia $arrowNumber';
       case GameType.bull:
-        return arrowIndex < 3 ? 'Arrow $arrowNumber' : 'Bull';
+        return arrowIndex < 3 ? 'Freccia $arrowNumber' : 'Centro';
       case GameType.impact:
-        return arrowIndex < 3 ? 'Arrow $arrowNumber' : 'Target';
+        return arrowIndex < 3 ? 'Freccia $arrowNumber' : 'Bersaglio';
       case GameType.solo:
-        return 'Arrow $arrowNumber';
+        return 'Freccia $arrowNumber';
     }
   }
 
@@ -316,21 +316,21 @@ class _GameScreenState extends State<GameScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Exit Game'),
-        content: const Text('Are you sure you want to exit the current game? All progress will be lost.'),
+        title: const Text('Esci dal Gioco'),
+        content: const Text('Sei sicuro di voler uscire dal gioco corrente? Tutti i progressi andranno persi.'),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Cancel'),
+            child: const Text('Annulla'),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/home');
             },
-            child: const Text('Exit'),
+            child: const Text('Esci'),
           ),
         ],
       ),
