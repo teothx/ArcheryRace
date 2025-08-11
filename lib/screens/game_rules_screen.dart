@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:arrowclash/bloc/game_bloc.dart';
 import 'package:arrowclash/models/game_models.dart';
-import 'package:arrowclash/utils/app_localizations.dart';
+import 'package:arrowclash/l10n/app_localizations.dart';
 
 class GameRulesScreen extends StatelessWidget {
   const GameRulesScreen({Key? key}) : super(key: key);

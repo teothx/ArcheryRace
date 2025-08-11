@@ -9,7 +9,7 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get appName => 'Archery Race';
+  String get appName => 'ArrowClash';
 
   @override
   String get login => 'Accedi';
@@ -319,6 +319,27 @@ class AppLocalizationsIt extends AppLocalizations {
   String get logoutSuccess => 'Sei stato disconnesso con successo!';
 
   @override
+  String get forgotPassword => 'Password dimenticata?';
+
+  @override
+  String get resetPassword => 'Reimposta Password';
+
+  @override
+  String get enterEmailToResetPassword => 'Inserisci il tuo indirizzo email per reimpostare la password';
+
+  @override
+  String get sendResetEmail => 'Invia Email di Reset';
+
+  @override
+  String get resetEmailSent => 'Email di reset inviata!';
+
+  @override
+  String get checkEmailForResetInstructions => 'Controlla la tua email per le istruzioni di reset della password';
+
+  @override
+  String get backToLogin => 'Torna al Login';
+
+  @override
   String get gameTypeDuo => 'Squadra mista: principiante + veterano';
 
   @override
@@ -332,4 +353,37 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get gameTypeSolo => 'Gioco individuale 18m';
+
+  @override
+  String get loginFailed => 'Login fallito. Controlla le tue credenziali.';
+
+  @override
+  String get registrationFailed => 'Registrazione fallita. Riprova.';
+
+  @override
+  String get logoutFailed => 'Logout fallito. Riprova.';
+
+  @override
+  String get invalidCredentials => 'Email o password non validi.';
+
+  @override
+  String get userNotFound => 'Utente non trovato. Controlla la tua email.';
+
+  @override
+  String get emailAlreadyExists => 'Esiste già un account con questa email.';
+
+  @override
+  String get weakPassword => 'La password è troppo debole. Scegli una password più sicura.';
+
+  @override
+  String get invalidEmail => 'Inserisci un indirizzo email valido.';
+
+  @override
+  String get tooManyRequests => 'Troppi tentativi di login. Riprova più tardi.';
+
+  @override
+  String get emailNotConfirmed => 'Conferma il tuo indirizzo email prima di accedere.';
+
+  @override
+  String get sessionExpired => 'La tua sessione è scaduta. Effettua nuovamente il login.';
 }

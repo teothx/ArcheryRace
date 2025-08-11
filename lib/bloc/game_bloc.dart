@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:arrowclash/models/game_models.dart';
+import '../repositories/game_repository.dart';
 
 // Events
 abstract class GameEvent extends Equatable {
@@ -149,6 +149,8 @@ class GameError extends GameState {
 
 // BLoC
 class GameBloc extends Bloc<GameEvent, GameState> {
+  final GameRepository _gameRepository = GameRepository();
+
   GameBloc() : super(GameInitial()) {
     on<InitializeGame>(_onInitializeGame);
     on<SetupGame>(_onSetupGame);
@@ -316,23 +318,19 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     try {
       final currentState = state as GameFinished;
       
-      // Save game results to shared preferences
-      final prefs = await SharedPreferences.getInstance();
-      final gameHistory = prefs.getStringList('gameHistory') ?? [];
+      final gameResult = GameResult(
+        gameType: currentState.gameType.toString(),
+        date: DateTime.now(),
+        participants: currentState.participantNames,
+        totals: currentState.totals,
+        scores: currentState.scores,
+      );
       
-      final gameResult = {
-        'gameType': currentState.gameType.toString(),
-        'date': DateTime.now().toIso8601String(),
-        'participants': currentState.participantNames,
-        'totals': currentState.totals,
-      };
-      
-      gameHistory.add(gameResult.toString());
-      await prefs.setStringList('gameHistory', gameHistory);
+      await _gameRepository.saveGameResult(gameResult);
       
       emit(currentState);
     } catch (e) {
-      emit(GameError(message: 'Failed to save game results: ${e.toString()}'));
+      emit(GameError(message: 'Errore nel salvare i risultati: ${e.toString()}'));
     }
   }
 
@@ -342,21 +340,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   ) async {
     emit(GameLoading());
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final gameHistoryStrings = prefs.getStringList('gameHistory') ?? [];
-      
-      final gameHistory = <Map<String, dynamic>>[];
-      for (final historyString in gameHistoryStrings) {
-        // In a real app, you would properly parse the string back to a map
-        // For now, we'll use the string to create a placeholder entry
-        gameHistory.add({
-          'gameType': 'Unknown',
-          'date': DateTime.now().toIso8601String(),
-          'participants': const [],
-          'totals': const {},
-          'rawData': historyString, // Store the raw string for potential future parsing
-        });
-      }
+      await _gameRepository.getUserGameHistory();
       
       if (state is GameFinished) {
         final currentState = state as GameFinished;
@@ -370,7 +354,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         emit(GameInitial());
       }
     } catch (e) {
-      emit(GameError(message: 'Failed to load game history: ${e.toString()}'));
+      emit(GameError(message: 'Errore nel caricare la cronologia: ${e.toString()}'));
     }
   }
 

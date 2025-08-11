@@ -53,10 +53,17 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state is Authenticated) {
           Navigator.of(context).pushReplacementNamed('/home');
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Errore'),
               content: Text(state.message),
-              backgroundColor: Colors.red,
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
             ),
           );
         }
@@ -204,6 +211,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                       ),
+                      // Forgot password link (only for login)
+                      if (_isLogin)
+                        const SizedBox(height: 16),
+                      if (_isLogin)
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed('/forgot-password');
+                          },
+                          child: const Text(
+                            'Password dimenticata?',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
                     ],
                   ),
                 ),

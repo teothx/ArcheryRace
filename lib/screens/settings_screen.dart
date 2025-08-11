@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:arrowclash/bloc/auth_bloc.dart';
-import 'package:arrowclash/utils/app_localizations.dart';
+import 'package:arrowclash/l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -22,14 +23,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _loadSettings() async {
-    final languageCode = await AppLocalizations.getLocale();
+    final prefs = await SharedPreferences.getInstance();
+    final languageCode = prefs.getString('language_code') ?? 'en';
     setState(() {
       _selectedLanguage = languageCode;
     });
   }
 
   Future<void> _changeLanguage(String languageCode) async {
-    await AppLocalizations.setLocale(languageCode);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('language_code', languageCode);
     setState(() {
       _selectedLanguage = languageCode;
     });

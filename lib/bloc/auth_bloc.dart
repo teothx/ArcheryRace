@@ -1,6 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../utils/supabase_config.dart';
+import '../utils/auth_error_handler.dart';
+import '../l10n/app_localizations.dart';
 
 // Events
 abstract class AuthEvent extends Equatable {
@@ -42,6 +45,15 @@ class RegisterRequested extends AuthEvent {
 
 class LogoutRequested extends AuthEvent {}
 
+class PasswordResetRequested extends AuthEvent {
+  final String email;
+
+  const PasswordResetRequested({required this.email});
+
+  @override
+  List<Object> get props => [email];
+}
+
 // States
 abstract class AuthState extends Equatable {
   const AuthState();
@@ -55,16 +67,18 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class Authenticated extends AuthState {
+  final String id;
   final String name;
   final String email;
 
   const Authenticated({
+    required this.id,
     required this.name,
     required this.email,
   });
 
   @override
-  List<Object> get props => [name, email];
+  List<Object> get props => [id, name, email];
 }
 
 class Unauthenticated extends AuthState {}
@@ -80,13 +94,26 @@ class AuthError extends AuthState {
   List<Object> get props => [message];
 }
 
+class PasswordResetSuccess extends AuthState {
+  final String message;
+
+  const PasswordResetSuccess({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
 // BLoC
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
+  final SupabaseClient _supabase = SupabaseConfig.client;
+  final AppLocalizations localizations;
+
+  AuthBloc({required this.localizations}) : super(AuthInitial()) {
     on<CheckAuthStatus>(_onCheckAuthStatus);
     on<LoginRequested>(_onLoginRequested);
     on<RegisterRequested>(_onRegisterRequested);
     on<LogoutRequested>(_onLogoutRequested);
+    on<PasswordResetRequested>(_onPasswordResetRequested);
   }
 
   Future<void> _onCheckAuthStatus(
@@ -95,13 +122,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-      final name = prefs.getString('name') ?? '';
-      final email = prefs.getString('email') ?? '';
-
-      if (isLoggedIn && name.isNotEmpty && email.isNotEmpty) {
-        emit(Authenticated(name: name, email: email));
+      final user = _supabase.auth.currentUser;
+      if (user != null) {
+        emit(Authenticated(
+          id: user.id,
+          name: user.userMetadata?['name'] ?? user.email?.split('@')[0] ?? 'Utente',
+          email: user.email ?? '',
+        ));
       } else {
         emit(Unauthenticated());
       }
@@ -116,22 +143,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      // In a real app, you would make an API call here
-      // For now, we'll simulate a successful login
-      await Future.delayed(const Duration(seconds: 1));
-      
-      // Save user data to shared preferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
-      await prefs.setString('name', event.email.split('@')[0]); // Use part of email as name
-      await prefs.setString('email', event.email);
-      
-      emit(Authenticated(
-        name: event.email.split('@')[0],
+      final response = await _supabase.auth.signInWithPassword(
         email: event.email,
-      ));
+        password: event.password,
+      );
+      
+      final user = response.user;
+      if (user != null) {
+        emit(Authenticated(
+          id: user.id,
+          name: user.userMetadata?['name'] ?? user.email?.split('@')[0] ?? 'Utente',
+          email: user.email ?? '',
+        ));
+      } else {
+        final errorMessage = AuthErrorHandler.getLocalizedErrorMessage('login failed', localizations);
+        emit(AuthError(message: errorMessage));
+      }
     } catch (e) {
-      emit(const AuthError(message: 'Login failed. Please check your credentials.'));
+      final errorMessage = AuthErrorHandler.getLocalizedErrorMessage(e.toString(), localizations);
+      emit(AuthError(message: errorMessage));
     }
   }
 
@@ -141,22 +171,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      // In a real app, you would make an API call here
-      // For now, we'll simulate a successful registration
-      await Future.delayed(const Duration(seconds: 1));
-      
-      // Save user data to shared preferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
-      await prefs.setString('name', event.name);
-      await prefs.setString('email', event.email);
-      
-      emit(Authenticated(
-        name: event.name,
+      final response = await _supabase.auth.signUp(
         email: event.email,
-      ));
+        password: event.password,
+        data: {'name': event.name},
+      );
+      
+      final user = response.user;
+      if (user != null) {
+        emit(Authenticated(
+          id: user.id,
+          name: event.name,
+          email: user.email ?? '',
+        ));
+      } else {
+        final errorMessage = AuthErrorHandler.getLocalizedErrorMessage('registration failed', localizations);
+        emit(AuthError(message: errorMessage));
+      }
     } catch (e) {
-      emit(const AuthError(message: 'Registration failed. Please try again.'));
+      final errorMessage = AuthErrorHandler.getLocalizedErrorMessage(e.toString(), localizations);
+      emit(AuthError(message: errorMessage));
     }
   }
 
@@ -166,12 +200,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.clear();
-      
+      await _supabase.auth.signOut();
       emit(Unauthenticated());
     } catch (e) {
-      emit(const AuthError(message: 'Logout failed. Please try again.'));
+      final errorMessage = AuthErrorHandler.getLocalizedErrorMessage(e.toString(), localizations);
+      emit(AuthError(message: errorMessage));
+    }
+  }
+
+  Future<void> _onPasswordResetRequested(
+    PasswordResetRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      await _supabase.auth.resetPasswordForEmail(event.email);
+      emit(PasswordResetSuccess(message: localizations.resetEmailSent));
+    } catch (e) {
+      final errorMessage = AuthErrorHandler.getLocalizedErrorMessage(e.toString(), localizations);
+      emit(AuthError(message: errorMessage));
     }
   }
 }

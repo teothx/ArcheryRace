@@ -98,7 +98,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Archery Race'**
+  /// **'ArrowClash'**
   String get appName;
 
   /// No description provided for @login.
@@ -230,7 +230,7 @@ abstract class AppLocalizations {
   /// No description provided for @numberOfVolleys.
   ///
   /// In en, this message translates to:
-  /// **'Number of Volleys'**
+  /// **'Number of Ends'**
   String get numberOfVolleys;
 
   /// No description provided for @pleaseEnterANumberBetween2And10.
@@ -284,7 +284,7 @@ abstract class AppLocalizations {
   /// No description provided for @volley.
   ///
   /// In en, this message translates to:
-  /// **'Volley {number}'**
+  /// **'End {number}'**
   String volley(Object number);
 
   /// No description provided for @gameInProgress.
@@ -308,13 +308,13 @@ abstract class AppLocalizations {
   /// No description provided for @oddVolleyDivisive.
   ///
   /// In en, this message translates to:
-  /// **'Odd Volley - Divisive'**
+  /// **'Odd End - Divisive'**
   String get oddVolleyDivisive;
 
   /// No description provided for @evenVolleyMultiplier.
   ///
   /// In en, this message translates to:
-  /// **'Even Volley - Multiplier'**
+  /// **'Even End - Multiplier'**
   String get evenVolleyMultiplier;
 
   /// No description provided for @archerA3ArrowsArcherBTheBull.
@@ -695,6 +695,48 @@ abstract class AppLocalizations {
   /// **'You have been logged out successfully!'**
   String get logoutSuccess;
 
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPassword;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// No description provided for @enterEmailToResetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address to reset your password'**
+  String get enterEmailToResetPassword;
+
+  /// No description provided for @sendResetEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Email'**
+  String get sendResetEmail;
+
+  /// No description provided for @resetEmailSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset email sent!'**
+  String get resetEmailSent;
+
+  /// No description provided for @checkEmailForResetInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email for password reset instructions'**
+  String get checkEmailForResetInstructions;
+
+  /// No description provided for @backToLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Login'**
+  String get backToLogin;
+
   /// No description provided for @gameTypeDuo.
   ///
   /// In en, this message translates to:
@@ -724,6 +766,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Individual 18m game'**
   String get gameTypeSolo;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed. Please check your credentials.'**
+  String get loginFailed;
+
+  /// No description provided for @registrationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed. Please try again.'**
+  String get registrationFailed;
+
+  /// No description provided for @logoutFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout failed. Please try again.'**
+  String get logoutFailed;
+
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password.'**
+  String get invalidCredentials;
+
+  /// No description provided for @userNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'User not found. Please check your email.'**
+  String get userNotFound;
+
+  /// No description provided for @emailAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this email already exists.'**
+  String get emailAlreadyExists;
+
+  /// No description provided for @weakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is too weak. Please choose a stronger password.'**
+  String get weakPassword;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address.'**
+  String get invalidEmail;
+
+  /// No description provided for @tooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many login attempts. Please try again later.'**
+  String get tooManyRequests;
+
+  /// No description provided for @emailNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your email address before logging in.'**
+  String get emailNotConfirmed;
+
+  /// No description provided for @sessionExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please log in again.'**
+  String get sessionExpired;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

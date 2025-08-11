@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Archery Race';
+  String get appName => 'ArrowClash';
 
   @override
   String get login => 'Login';
@@ -77,7 +77,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterANumberBetween1And20 => 'Please enter a number between 1 and 20';
 
   @override
-  String get numberOfVolleys => 'Number of Volleys';
+  String get numberOfVolleys => 'Number of Ends';
 
   @override
   String get pleaseEnterANumberBetween2And10 => 'Please enter a number between 2 and 10';
@@ -105,7 +105,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String volley(Object number) {
-    return 'Volley $number';
+    return 'End $number';
   }
 
   @override
@@ -122,10 +122,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get oddVolleyDivisive => 'Odd Volley - Divisive';
+  String get oddVolleyDivisive => 'Odd End - Divisive';
 
   @override
-  String get evenVolleyMultiplier => 'Even Volley - Multiplier';
+  String get evenVolleyMultiplier => 'Even End - Multiplier';
 
   @override
   String get archerA3ArrowsArcherBTheBull => 'Archer A 3 arrows - Archer B the Bull';
@@ -319,6 +319,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logoutSuccess => 'You have been logged out successfully!';
 
   @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
+  String get resetPassword => 'Reset Password';
+
+  @override
+  String get enterEmailToResetPassword => 'Enter your email address to reset your password';
+
+  @override
+  String get sendResetEmail => 'Send Reset Email';
+
+  @override
+  String get resetEmailSent => 'Reset email sent!';
+
+  @override
+  String get checkEmailForResetInstructions => 'Check your email for password reset instructions';
+
+  @override
+  String get backToLogin => 'Back to Login';
+
+  @override
   String get gameTypeDuo => 'Mixed team: beginner + veteran';
 
   @override
@@ -332,4 +353,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gameTypeSolo => 'Individual 18m game';
+
+  @override
+  String get loginFailed => 'Login failed. Please check your credentials.';
+
+  @override
+  String get registrationFailed => 'Registration failed. Please try again.';
+
+  @override
+  String get logoutFailed => 'Logout failed. Please try again.';
+
+  @override
+  String get invalidCredentials => 'Invalid email or password.';
+
+  @override
+  String get userNotFound => 'User not found. Please check your email.';
+
+  @override
+  String get emailAlreadyExists => 'An account with this email already exists.';
+
+  @override
+  String get weakPassword => 'Password is too weak. Please choose a stronger password.';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email address.';
+
+  @override
+  String get tooManyRequests => 'Too many login attempts. Please try again later.';
+
+  @override
+  String get emailNotConfirmed => 'Please confirm your email address before logging in.';
+
+  @override
+  String get sessionExpired => 'Your session has expired. Please log in again.';
 }

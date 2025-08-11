@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:arrowclash/bloc/game_bloc.dart';
 import 'package:arrowclash/models/game_models.dart';
+import 'package:arrowclash/l10n/app_localizations.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -418,24 +419,25 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _showExitConfirmationDialog() {
+    final localizations = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Esci dal Gioco'),
-        content: const Text('Sei sicuro di voler uscire dal gioco corrente? Tutti i progressi andranno persi.'),
+        title: Text(localizations.exitGame),
+        content: Text(localizations.areYouSureYouWantToExit),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Annulla'),
+            child: Text(localizations.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/home');
             },
-            child: const Text('Esci'),
+            child: Text(localizations.exit),
           ),
         ],
       ),
