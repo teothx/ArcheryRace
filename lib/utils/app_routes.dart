@@ -43,9 +43,8 @@ class AppRoutes {
           settings: settings,
         );
       case gameRules:
-        final gameType = settings.arguments as String?;
         return MaterialPageRoute(
-          builder: (_) => GameRulesScreen(),
+          builder: (_) => const GameRulesScreen(),
           settings: settings,
         );
       case gameSetup:

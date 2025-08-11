@@ -119,14 +119,12 @@ class GameFinished extends GameState {
   final Map<String, List<int>> scores;
   final Map<String, int> totals;
   final List<String> participantNames;
-  final List<Map<String, dynamic>> gameHistory;
 
   const GameFinished({
     required this.gameType,
     required this.scores,
     required this.totals,
     required this.participantNames,
-    required this.gameHistory,
   });
 
   @override
@@ -135,7 +133,6 @@ class GameFinished extends GameState {
         scores,
         totals,
         participantNames,
-        gameHistory,
       ];
 }
 
@@ -162,11 +159,11 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     on<LoadGameHistory>(_onLoadGameHistory);
   }
 
+
   void _onInitializeGame(
     InitializeGame event,
     Emitter<GameState> emit,
   ) {
-    emit(GameLoading());
     try {
       emit(GameSetup(gameType: event.gameType));
     } catch (e) {
@@ -178,37 +175,41 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     SetupGame event,
     Emitter<GameState> emit,
   ) {
-    emit(GameLoading());
+
+    
     try {
-      GameType gameType;
-      
-      // Check if current state is GameSetup
+      // Get the game type from the current state BEFORE emitting GameLoading
       if (state is GameSetup) {
-        final currentState = state as GameSetup;
-        gameType = currentState.gameType;
+        final gameType = (state as GameSetup).gameType;
+
+        
+        emit(GameLoading());
+        
+        final scores = <String, List<int>>{};
+        final totals = <String, int>{};
+
+        for (final name in event.participantNames) {
+          scores[name] = [];
+          totals[name] = 0;
+        }
+
+        emit(GameInProgress(
+          gameType: gameType,
+          scores: scores,
+          totals: totals,
+          currentVolley: 1,
+          currentParticipantIndex: 0,
+          participantNames: event.participantNames,
+          numVolleys: event.numVolleys,
+        ));
+        
+
       } else {
-        // If not in GameSetup state, use a default game type
-        gameType = GameType.classica;
-      }
-      
-      final scores = <String, List<int>>{};
-      final totals = <String, int>{};
 
-      for (final name in event.participantNames) {
-        scores[name] = [];
-        totals[name] = 0;
+        emit(GameError(message: 'Game not initialized. Please initialize the game first.'));
       }
-
-      emit(GameInProgress(
-        gameType: gameType,
-        scores: scores,
-        totals: totals,
-        currentVolley: 1,
-        currentParticipantIndex: 0,
-        participantNames: event.participantNames,
-        numVolleys: event.numVolleys,
-      ));
     } catch (e) {
+
       emit(GameError(message: 'Failed to setup game: ${e.toString()}'));
     }
   }
@@ -252,7 +253,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           scores: scores,
           totals: totals,
           participantNames: currentState.participantNames,
-          gameHistory: [],
         ));
       } else {
         emit(GameInProgress(
@@ -303,7 +303,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         scores: currentState.scores,
         totals: currentState.totals,
         participantNames: currentState.participantNames,
-        gameHistory: [],
       ));
     } catch (e) {
       emit(GameError(message: 'Failed to finish game: ${e.toString()}'));
@@ -349,12 +348,13 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       final gameHistory = <Map<String, dynamic>>[];
       for (final historyString in gameHistoryStrings) {
         // In a real app, you would properly parse the string back to a map
-        // For now, we'll just create a placeholder
+        // For now, we'll use the string to create a placeholder entry
         gameHistory.add({
           'gameType': 'Unknown',
           'date': DateTime.now().toIso8601String(),
-          'participants': [],
-          'totals': {},
+          'participants': const [],
+          'totals': const {},
+          'rawData': historyString, // Store the raw string for potential future parsing
         });
       }
       
@@ -365,7 +365,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           scores: currentState.scores,
           totals: currentState.totals,
           participantNames: currentState.participantNames,
-          gameHistory: gameHistory,
         ));
       } else {
         emit(GameInitial());

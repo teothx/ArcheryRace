@@ -15,13 +15,13 @@ class SplashScreen extends StatelessWidget {
           Navigator.of(context).pushReplacementNamed('/login');
         }
       },
-      child: Scaffold(
+      child: const Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Logo or App Name
-              const Text(
+              Text(
                 'Gara di Tiro con l\'Arco',
                 style: TextStyle(
                   fontSize: 32,
@@ -29,11 +29,11 @@ class SplashScreen extends StatelessWidget {
                   color: Colors.blue,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               // Loading indicator
-              const CircularProgressIndicator(),
-              const SizedBox(height: 20),
-              const Text(
+              CircularProgressIndicator(),
+              SizedBox(height: 20),
+              Text(
                 'Caricamento...',
                 style: TextStyle(
                   fontSize: 16,

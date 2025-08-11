@@ -10,6 +10,58 @@ class GameScreen extends StatefulWidget {
   State<GameScreen> createState() => _GameScreenState();
 }
 
+class _ScoreButton extends StatelessWidget {
+  final String label;
+  final Color color;
+  final Color textColor;
+  final bool isSelected;
+  final Color borderColor;
+  final VoidCallback onPressed;
+
+  const _ScoreButton({
+    required this.label,
+    required this.color,
+    required this.textColor,
+    required this.isSelected,
+    required this.borderColor,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: textColor,
+        elevation: isSelected ? 6 : 2,
+        minimumSize: const Size(40, 40),
+        padding: const EdgeInsets.all(8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: isSelected
+              ? BorderSide(color: borderColor, width: 3)
+              : BorderSide.none,
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: isSelected ? FontWeight.w900 : FontWeight.bold,
+          shadows: isSelected ? [
+            const Shadow(
+              color: Colors.black,
+              offset: Offset(0, 1),
+              blurRadius: 2,
+            ),
+          ] : null,
+        ),
+      ),
+    );
+  }
+}
+
 class _GameScreenState extends State<GameScreen> {
   List<int> _selectedScores = [];
   List<bool> _scoreSelections = [];
@@ -181,18 +233,26 @@ class _GameScreenState extends State<GameScreen> {
       case GameType.duo:
         return Text(
           state.currentVolley % 2 == 1
-              ? 'Volée Dispari - Divisivo'
-              : 'Volée Pari - Moltiplicatore',
+              ? '**Volée Divisoria**'
+              : '**Volée Moltiplicatrice**',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: state.currentVolley % 2 == 1 ? Colors.red : Colors.green,
           ),
         );
+      case GameType.classica:
+        return const Text(
+          'Ogni arciero tira 3 frecce → somma 6 valori',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.green,
+          ),
+        );
       case GameType.bull:
         return Text(
           state.currentVolley % 2 == 1
-              ? 'Arciere A 3 frecce - Arciere B il Centro'
-              : 'Arciere B 3 frecce - Arciere A il Centro',
+              ? 'Arciere A 3 frecce – Arciere B la Bull'
+              : 'Arciere B 3 frecce – Arciere A la Bull',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.blue,
@@ -201,17 +261,16 @@ class _GameScreenState extends State<GameScreen> {
       case GameType.impact:
         return Text(
           state.currentVolley % 2 == 1
-              ? 'Arciere A 3 frecce - Arciere B bersaglio'
-              : 'Arciere B 3 frecce - Arciere A bersaglio',
+              ? 'Arciere A 3 frecce – Arciere B 1 target'
+              : 'Arciere B 3 frecce – Arciere A 1 target',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.orange,
           ),
         );
-      case GameType.classica:
       case GameType.solo:
         return const Text(
-          'Punteggio standard',
+          '3 frecce (1-10 o M) – somma punteggio',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.green,
@@ -235,42 +294,47 @@ class _GameScreenState extends State<GameScreen> {
           ),
           const SizedBox(height: 16),
           Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 5,
-                childAspectRatio: 1,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-              ),
+            child: ListView.builder(
               itemCount: _getRequiredArrowsCount(state.gameType),
               itemBuilder: (context, arrowIndex) {
-                return Column(
-                  children: [
-                    Text(
-                      _getArrowLabel(state.gameType, arrowIndex),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _getArrowLabel(state.gameType, arrowIndex),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    DropdownButton<int>(
-                      value: _scoreSelections[arrowIndex] ? _selectedScores[arrowIndex] : null,
-                      hint: const Text('Punteggio'),
-                      items: List.generate(11, (index) {
-                        final score = index == 10 ? 0 : 10 - index; // 10, 9, ..., 1, 0 (M)
-                        final label = score == 0 ? 'M' : score.toString();
-                        return DropdownMenuItem<int>(
-                          value: score,
-                          child: Text(label),
-                        );
-                      }),
-                      onChanged: (score) {
-                        if (score != null) {
-                          _onScoreSelected(arrowIndex, score);
-                        }
-                      },
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(11, (scoreIndex) {
+                            final score = scoreIndex == 10 ? 0 : 10 - scoreIndex; // 10, 9, ..., 1, 0 (M)
+                            final label = score == 0 ? 'M' : score.toString();
+                            final color = _getScoreColor(score);
+                            final isSelected = _scoreSelections[arrowIndex] && _selectedScores[arrowIndex] == score;
+                            
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: _ScoreButton(
+                                label: score == 0 ? 'M' : label,
+                                color: color,
+                                textColor: _getScoreTextColor(score),
+                                isSelected: isSelected,
+                                borderColor: _getSelectionBorderColor(score),
+                                onPressed: () => _onScoreSelected(arrowIndex, score),
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -278,6 +342,47 @@ class _GameScreenState extends State<GameScreen> {
         ],
       ),
     );
+  }
+
+  Color _getScoreColor(int score) {
+    // Colors for archery target rings (grouped by score ranges)
+    switch (score) {
+      case 10:
+      case 9: return Colors.yellow; // Yellow for 10 and 9
+      case 8:
+      case 7: return Colors.red; // Red for 8 and 7
+      case 6:
+      case 5: return Colors.blue; // Blue for 6 and 5
+      case 4:
+      case 3: return Colors.black; // Black for 4 and 3
+      case 2:
+      case 1: return Colors.white; // White for 2 and 1
+      case 0: return Colors.green; // Green for Miss (M)
+      default: return Colors.grey;
+    }
+  }
+
+  Color _getScoreTextColor(int score) {
+    // Return black text for white and yellow buttons, white text for all others
+    return (score == 1 || score == 2 || score == 9 || score == 10) ? Colors.black : Colors.white;
+  }
+
+  Color _getSelectionBorderColor(int score) {
+    // Return contrasting border colors for better visibility
+    switch (score) {
+      case 10:
+      case 9: return Colors.black; // Black border for yellow buttons
+      case 8:
+      case 7: return Colors.white; // White border for red buttons
+      case 6:
+      case 5: return Colors.white; // White border for blue buttons
+      case 4:
+      case 3: return Colors.red; // Red border for black buttons
+      case 2:
+      case 1: return Colors.black; // Black border for white buttons
+      case 0: return Colors.white; // White border for green button (Miss)
+      default: return Colors.black;
+    }
   }
 
   String _getArrowLabel(GameType gameType, int arrowIndex) {
@@ -300,15 +405,15 @@ class _GameScreenState extends State<GameScreen> {
   String _getGameTitle(GameType gameType) {
     switch (gameType) {
       case GameType.duo:
-        return 'Duo Challenge';
+        return 'Duo';
       case GameType.classica:
-        return 'La Classica';
+        return 'Classica';
       case GameType.bull:
         return 'Bull\'s Revenge';
       case GameType.impact:
         return 'Red Impact';
       case GameType.solo:
-        return '18m Singolo';
+        return '18 m Singolo';
     }
   }
 

@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:arrowclash/bloc/game_bloc.dart';
-import 'package:arrowclash/bloc/auth_bloc.dart';
 import 'package:arrowclash/models/game_models.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class ResultsScreen extends StatefulWidget {
   const ResultsScreen({Key? key}) : super(key: key);
@@ -15,29 +12,9 @@ class ResultsScreen extends StatefulWidget {
 }
 
 class _ResultsScreenState extends State<ResultsScreen> {
-  List<Map<String, dynamic>> _gameHistory = [];
-
   @override
   void initState() {
     super.initState();
-    _loadGameHistory();
-  }
-
-  Future<void> _loadGameHistory() async {
-    final prefs = await SharedPreferences.getInstance();
-    final gameHistoryStrings = prefs.getStringList('gameHistory') ?? [];
-    
-    setState(() {
-      _gameHistory = gameHistoryStrings.map((historyString) {
-        try {
-          // Try to parse the string as JSON
-          return jsonDecode(historyString) as Map<String, dynamic>;
-        } catch (e) {
-          // If parsing fails, return an empty map
-          return <String, dynamic>{};
-        }
-      }).toList();
-    });
   }
 
   @override
@@ -156,7 +133,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
             child: SingleChildScrollView(
               child: DataTable(
                 columnSpacing: 16,
-                headingRowColor: MaterialStateProperty.all(Colors.blue.shade100),
+                headingRowColor: WidgetStateProperty.all(Colors.blue.shade100),
                 columns: const [
                   DataColumn(
                     label: Text(
@@ -214,15 +191,15 @@ class _ResultsScreenState extends State<ResultsScreen> {
           Expanded(
             child: LineChart(
               LineChartData(
-                gridData: FlGridData(show: true),
+                gridData: const FlGridData(show: true),
                 titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
+                  leftTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: true),
                   ),
-                  rightTitles: AxisTitles(
+                  rightTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
-                  topTitles: AxisTitles(
+                  topTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
                   bottomTitles: AxisTitles(
@@ -258,7 +235,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     color: _getParticipantColor(state.participantNames.indexOf(participant)),
                     barWidth: 3,
                     isStrokeCapRound: true,
-                    dotData: FlDotData(show: true),
+                    dotData: const FlDotData(show: true),
                     belowBarData: BarAreaData(show: false),
                   );
                 }).toList(),

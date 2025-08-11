@@ -18,7 +18,7 @@ import 'package:arrowclash/screens/settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final String languageCode = await AppLocalizations.getLocale() ?? 'en';
+  final String languageCode = await AppLocalizations.getLocale();
   runApp(ArrowClashApp(languageCode: languageCode));
 }
 

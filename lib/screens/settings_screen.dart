@@ -75,10 +75,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       value: _selectedLanguage,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Language',
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.language),
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.language),
                       ),
                       items: const [
                         DropdownMenuItem<String>(
@@ -181,9 +181,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   backgroundColor: Colors.blue,
                 ),
-                child: Text(
+                child: const Text(
                   'Save',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     color: Colors.white,
                   ),

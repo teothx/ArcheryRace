@@ -6,7 +6,7 @@ import 'package:arrowclash/main.dart';
 void main() {
   testWidgets('App loads correctly', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const ArcheryRaceApp());
+    await tester.pumpWidget(const ArrowClashApp(languageCode: 'en'));
 
     // Verify that the app loads
     expect(find.byType(MaterialApp), findsOneWidget);

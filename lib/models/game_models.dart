@@ -31,11 +31,13 @@ class GameResult {
       date: DateTime.parse(json['date'] ?? DateTime.now().toIso8601String()),
       participants: List<String>.from(json['participants'] ?? []),
       totals: Map<String, int>.from(json['totals'] ?? {}),
-      scores: Map<String, List<int>>.from(
-        (json['scores'] as Map)?.map(
-          (key, value) => MapEntry(key, List<int>.from(value)),
-        ) ?? {},
-      ),
+      scores: json['scores'] != null
+          ? Map<String, List<int>>.from(
+              (json['scores'] as Map).map(
+                (key, value) => MapEntry(key, List<int>.from(value)),
+              ),
+            )
+          : {},
     );
   }
 }
@@ -88,35 +90,35 @@ extension GameTypeExtension on GameType {
     switch (this) {
       case GameType.duo:
         return '''
-• Mixed team: beginner + veteran
-• Odd volley: beginner 3 arrows, veteran 1 arrow = divisor
-• Even volley: veteran 3 arrows, beginner 1 arrow = multiplier
-• Number of even volleys – cumulative score
+• Squadra mista: principiante + veterano
+• Volée dispari: principiante 3 frecce, veterano 1 freccia = **divisore**
+• Volée pari: veterano 3 frecce, principiante 1 freccia = **moltiplicatore**
+• Numero di volée pari – punteggio cumulativo
         ''';
       case GameType.classica:
         return '''
-• Each archer shoots 3 arrows → sum 6 values for team
-• No multiplier
-• Number of even volleys
+• Ogni arciero tira 3 frecce → somma 6 valori per squadra
+• Nessun moltiplicatore
+• Numero di volée pari
         ''';
       case GameType.bull:
         return '''
-• Odd volley: Archer A 3 arrows, Archer B the Bull
-• Even volley: roles reversed
-• Team score = (sum of 3 arrows) × Bull multiplier
-• 10 → ×3, 9-8 → ×2, 7-6 → ×1.5, 5-1 → ×1, 0 (M) → 0
+• **Volée dispari**: Arciere A 3 frecce, Arciere B la Bull
+• **Volée pari**: ruoli invertiti
+• **Punteggio squadra** = (somma 3 frecce) × moltiplicatore Bull
+  - 10 → ×3, 9-8 → ×2, 7-6 → ×1.5, 5-1 → ×1, 0 (M) → 0
         ''';
       case GameType.impact:
         return '''
-• Odd volley: Archer A 3 arrows, Archer B 1 target
-• Even volley: roles reversed
-• Target 7-10 → ×2 on base score
-• 1-6 or M → no effect
+• **Volée dispari**: Arciere A 3 frecce, Arciere B 1 target
+• **Volée pari**: ruoli invertiti
+• Target 7-10 → ×2 sul punteggio base
+• 1-6 o M → nessun effetto
         ''';
       case GameType.solo:
         return '''
-• Individual competition – 3 arrows per volley
-• Values 1-10 or M (0) – cumulative score
+• Gara individuale – 3 frecce per volée
+• Valori 1-10 o M (0) – punteggio cumulativo
         ''';
     }
   }

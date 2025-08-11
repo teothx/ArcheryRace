@@ -29,12 +29,15 @@ class GameSelectionScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: ListView(
-                children: [
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  child: ListView(
+                    children: [
                   _buildGameCard(
                     context,
                     title: 'Archery Duo Challenge',
-                    description: 'Mixed team: beginner + veteran',
+                    description: 'Squadra mista: principiante + veterano',
                     icon: Icons.people,
                     color: Colors.blue,
                     gameType: 'duo',
@@ -43,7 +46,7 @@ class GameSelectionScreen extends StatelessWidget {
                   _buildGameCard(
                     context,
                     title: 'La Classica',
-                    description: 'Classic archery game',
+                    description: 'Ogni arciero tira 3 frecce → somma 6 valori per squadra',
                     icon: Icons.sports,
                     color: Colors.green,
                     gameType: 'classica',
@@ -52,7 +55,7 @@ class GameSelectionScreen extends StatelessWidget {
                   _buildGameCard(
                     context,
                     title: 'Bull\'s Revenge',
-                    description: 'Bull\'s eye challenge',
+                    description: 'Volée dispari: Arciere A 3 frecce, Arciere B la Bull',
                     icon: Icons.track_changes,
                     color: Colors.red,
                     gameType: 'bull',
@@ -61,7 +64,7 @@ class GameSelectionScreen extends StatelessWidget {
                   _buildGameCard(
                     context,
                     title: 'Red Impact',
-                    description: 'Target impact game',
+                    description: 'Volée dispari: Arciere A 3 frecce, Arciere B 1 target',
                     icon: Icons.center_focus_strong,
                     color: Colors.orange,
                     gameType: 'impact',
@@ -69,13 +72,15 @@ class GameSelectionScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   _buildGameCard(
                     context,
-                    title: '18m Singolo',
-                    description: 'Individual 18m game',
+                    title: '18 m Singolo',
+                    description: 'Gara individuale – 3 frecce per volée',
                     icon: Icons.person,
                     color: Colors.purple,
                     gameType: 'solo',
                   ),
-                ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
@@ -106,22 +111,22 @@ class GameSelectionScreen extends StatelessWidget {
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
+                  color: color.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   icon,
-                  size: 36,
+                  size: 28,
                   color: color,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,15 +134,15 @@ class GameSelectionScreen extends StatelessWidget {
                     Text(
                       title,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
                       description,
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         color: Colors.grey,
                       ),
                     ),
@@ -147,6 +152,7 @@ class GameSelectionScreen extends StatelessWidget {
               const Icon(
                 Icons.arrow_forward_ios,
                 color: Colors.grey,
+                size: 16,
               ),
             ],
           ),

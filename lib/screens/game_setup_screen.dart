@@ -17,6 +17,19 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
   List<TextEditingController> _nameControllers = [];
   int _setupStep = 0;
   bool _isSoloGame = false;
+  GameType _selectedGameType = GameType.classica; // Default game type
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Check if game type was passed as argument
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is GameType) {
+      _selectedGameType = args;
+      _isSoloGame = args == GameType.solo;
+      // Don't initialize again - it's already done in GameRulesScreen
+    }
+  }
 
   @override
   void initState() {
@@ -45,15 +58,26 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
   }
 
   void _submitSetup() {
-    if (_formKey.currentState!.validate()) {
-      final numParticipants = int.parse(_numParticipantsController.text);
-      final numVolleys = int.parse(_numVolleysController.text);
-      
-      setState(() {
-        _setupStep = 1;
-        _initializeNameControllers(numParticipants);
-      });
-    }
+    final numParticipants = int.parse(_numParticipantsController.text);
+    final numVolleys = int.parse(_numVolleysController.text);
+    final participantNames = List.generate(numParticipants, (index) => 'Player ${index + 1}');
+
+
+    
+    // Set up the game with the provided details
+    context.read<GameBloc>().add(
+          SetupGame(
+            numParticipants: numParticipants,
+            numVolleys: numVolleys,
+            participantNames: participantNames,
+          ),
+        );
+
+    // Set up name controllers
+    setState(() {
+      _setupStep = 1;
+      _initializeNameControllers(numParticipants);
+    });
   }
 
   void _submitNames() {
@@ -62,6 +86,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
       final numParticipants = int.parse(_numParticipantsController.text);
       final numVolleys = int.parse(_numVolleysController.text);
       
+      // Set up the game with all the information
       context.read<GameBloc>().add(
             SetupGame(
               numParticipants: numParticipants,
@@ -69,8 +94,6 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
               participantNames: participantNames,
             ),
           );
-      
-      Navigator.of(context).pushReplacementNamed('/game');
     }
   }
 
@@ -78,6 +101,7 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
   Widget build(BuildContext context) {
     return BlocListener<GameBloc, GameState>(
       listener: (context, state) {
+
         if (state is GameError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -85,6 +109,16 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
               backgroundColor: Colors.red,
             ),
           );
+        } else if (state is GameInProgress) {
+          // Navigate to game screen when game is properly set up
+
+          Navigator.of(context).pushReplacementNamed('/game');
+        } else if (state is GameSetup) {
+          // Update the UI when game type is set
+          setState(() {
+            _isSoloGame = state.gameType == GameType.solo;
+
+          });
         }
       },
       child: Scaffold(
@@ -92,7 +126,6 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
           title: BlocBuilder<GameBloc, GameState>(
             builder: (context, state) {
               if (state is GameSetup) {
-                _isSoloGame = state.gameType == GameType.solo;
                 return Text('Impostazione Torneo - ${_getGameTitle(state.gameType)}');
               }
               return const Text('Impostazione Torneo');
@@ -121,12 +154,13 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Passo 1: Configurazione Gioco',
+          'Configurazione Gioco',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
+        const SizedBox(height: 20),
         const SizedBox(height: 20),
         TextFormField(
           controller: _numParticipantsController,
@@ -238,18 +272,23 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
           ),
         ),
         const SizedBox(height: 20),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _submitNames,
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+        BlocBuilder<GameBloc, GameState>(
+          builder: (context, state) {
+            bool isSetup = state is GameSetup;
+            return SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: isSetup ? _submitNames : null,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text('Conferma Nomi'),
               ),
-            ),
-            child: const Text('Conferma Nomi'),
-          ),
+            );
+          },
         ),
       ],
     );

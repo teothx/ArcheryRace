@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppLocalizations {
@@ -14,7 +13,7 @@ class AppLocalizations {
 
   AppLocalizations(this.locale);
 
-  static Map<String, Map<String, String>> _localizedValues = {
+  static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
       'appName': 'ArrowClash',
       'login': 'Login',
@@ -90,7 +89,7 @@ class AppLocalizations {
       'saveResults': 'Save Results',
       'finalResults': 'Final Results',
       'rank': 'Rank',
-      'name': 'Name',
+      'nameColumn': 'Name',
       'total': 'Total',
       'scoreEvolution': 'Score Evolution',
       'resultsSaved': 'Results Saved',
@@ -103,7 +102,7 @@ class AppLocalizations {
       'enableOrDisableNotifications': 'Enable or disable notifications',
       'darkTheme': 'Dark Theme',
       'enableDarkTheme': 'Enable dark theme',
-      'statistics': 'Statistics',
+      'statisticsPage': 'Statistics',
       'gamesPlayed': 'Games Played',
       'victories': 'Victories',
       'maxScore': 'Max Score',
@@ -199,7 +198,7 @@ class AppLocalizations {
       'saveResults': 'Salva Risultati',
       'finalResults': 'Risultati Finali',
       'rank': 'Posizione',
-      'name': 'Nome',
+      'nameColumn': 'Nome',
       'total': 'Totale',
       'scoreEvolution': 'Evoluzione Punteggio',
       'resultsSaved': 'Risultati Salvati',
@@ -212,7 +211,7 @@ class AppLocalizations {
       'enableOrDisableNotifications': 'Abilita o disabilita le notifiche',
       'darkTheme': 'Tema Scuro',
       'enableDarkTheme': 'Abilita il tema scuro',
-      'statistics': 'Statistiche',
+      'statisticsPage': 'Statistiche',
       'gamesPlayed': 'Partite Giocate',
       'victories': 'Vittorie',
       'maxScore': 'Punteggio Max',
@@ -309,7 +308,7 @@ class AppLocalizations {
   String get saveResults => _localizedValues[locale.languageCode]!['saveResults']!;
   String get finalResults => _localizedValues[locale.languageCode]!['finalResults']!;
   String get rank => _localizedValues[locale.languageCode]!['rank']!;
-  String get nameColumn => _localizedValues[locale.languageCode]!['name']!;
+  String get nameColumn => _localizedValues[locale.languageCode]!['nameColumn']!;
   String get total => _localizedValues[locale.languageCode]!['total']!;
   String get scoreEvolution => _localizedValues[locale.languageCode]!['scoreEvolution']!;
   String get resultsSaved => _localizedValues[locale.languageCode]!['resultsSaved']!;
@@ -322,7 +321,7 @@ class AppLocalizations {
   String get enableOrDisableNotifications => _localizedValues[locale.languageCode]!['enableOrDisableNotifications']!;
   String get darkTheme => _localizedValues[locale.languageCode]!['darkTheme']!;
   String get enableDarkTheme => _localizedValues[locale.languageCode]!['enableDarkTheme']!;
-  String get statisticsPage => _localizedValues[locale.languageCode]!['statistics']!;
+  String get statisticsPage => _localizedValues[locale.languageCode]!['statisticsPage']!;
   String get gamesPlayed => _localizedValues[locale.languageCode]!['gamesPlayed']!;
   String get victories => _localizedValues[locale.languageCode]!['victories']!;
   String get maxScore => _localizedValues[locale.languageCode]!['maxScore']!;
