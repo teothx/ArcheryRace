@@ -54,6 +54,8 @@ class AddScore extends GameEvent {
 
 class NextVolley extends GameEvent {}
 
+class ContinueToNextVolley extends GameEvent {}
+
 class FinishGame extends GameEvent {}
 
 class SaveGameResults extends GameEvent {}
@@ -114,6 +116,34 @@ class GameInProgress extends GameState {
       ];
 }
 
+class VolleyCompleted extends GameState {
+  final GameType gameType;
+  final Map<String, List<int>> scores;
+  final Map<String, int> totals;
+  final int currentVolley;
+  final List<String> participantNames;
+  final int numVolleys;
+
+  const VolleyCompleted({
+    required this.gameType,
+    required this.scores,
+    required this.totals,
+    required this.currentVolley,
+    required this.participantNames,
+    required this.numVolleys,
+  });
+
+  @override
+  List<Object> get props => [
+        gameType,
+        scores,
+        totals,
+        currentVolley,
+        participantNames,
+        numVolleys,
+      ];
+}
+
 class GameFinished extends GameState {
   final GameType gameType;
   final Map<String, List<int>> scores;
@@ -156,6 +186,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     on<SetupGame>(_onSetupGame);
     on<AddScore>(_onAddScore);
     on<NextVolley>(_onNextVolley);
+    on<ContinueToNextVolley>(_onContinueToNextVolley);
     on<FinishGame>(_onFinishGame);
     on<SaveGameResults>(_onSaveGameResults);
     on<LoadGameHistory>(_onLoadGameHistory);
@@ -239,29 +270,38 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       // Update total
       totals[event.participantName] = (totals[event.participantName] ?? 0) + calculatedScore;
 
-      // Move to next participant or volley
+      // Move to next participant
       int nextParticipantIndex = currentState.currentParticipantIndex + 1;
-      int nextVolley = currentState.currentVolley;
 
+      // Check if all participants have completed this volley
       if (nextParticipantIndex >= currentState.participantNames.length) {
-        nextParticipantIndex = 0;
-        nextVolley++;
-      }
-
-      // Check if game is finished
-      if (nextVolley > currentState.numVolleys) {
-        emit(GameFinished(
-          gameType: currentState.gameType,
-          scores: scores,
-          totals: totals,
-          participantNames: currentState.participantNames,
-        ));
+        // Check if this is the last volley
+        if (currentState.currentVolley >= currentState.numVolleys) {
+          // Last volley completed, go directly to final results
+          emit(GameFinished(
+            gameType: currentState.gameType,
+            scores: scores,
+            totals: totals,
+            participantNames: currentState.participantNames,
+          ));
+        } else {
+          // Not the last volley, show provisional leaderboard
+          emit(VolleyCompleted(
+            gameType: currentState.gameType,
+            scores: scores,
+            totals: totals,
+            currentVolley: currentState.currentVolley,
+            participantNames: currentState.participantNames,
+            numVolleys: currentState.numVolleys,
+          ));
+        }
       } else {
+        // Continue with next participant in same volley
         emit(GameInProgress(
           gameType: currentState.gameType,
           scores: scores,
           totals: totals,
-          currentVolley: nextVolley,
+          currentVolley: currentState.currentVolley,
           currentParticipantIndex: nextParticipantIndex,
           participantNames: currentState.participantNames,
           numVolleys: currentState.numVolleys,
@@ -290,6 +330,38 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       ));
     } catch (e) {
       emit(GameError(message: 'Failed to move to next volley: ${e.toString()}'));
+    }
+  }
+
+  void _onContinueToNextVolley(
+    ContinueToNextVolley event,
+    Emitter<GameState> emit,
+  ) {
+    try {
+      final currentState = state as VolleyCompleted;
+      
+      // Check if game is finished
+      if (currentState.currentVolley >= currentState.numVolleys) {
+        emit(GameFinished(
+          gameType: currentState.gameType,
+          scores: currentState.scores,
+          totals: currentState.totals,
+          participantNames: currentState.participantNames,
+        ));
+      } else {
+        // Continue to next volley
+        emit(GameInProgress(
+          gameType: currentState.gameType,
+          scores: currentState.scores,
+          totals: currentState.totals,
+          currentVolley: currentState.currentVolley + 1,
+          currentParticipantIndex: 0,
+          participantNames: currentState.participantNames,
+          numVolleys: currentState.numVolleys,
+        ));
+      }
+    } catch (e) {
+      emit(GameError(message: 'Failed to continue to next volley: ${e.toString()}'));
     }
   }
 

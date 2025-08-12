@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:arrowclash/bloc/game_bloc.dart';
 import 'package:arrowclash/models/game_models.dart';
 import 'package:arrowclash/l10n/app_localizations.dart';
+import 'volley_leaderboard_screen.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -126,6 +127,13 @@ class _GameScreenState extends State<GameScreen> {
       listener: (context, state) {
         if (state is GameFinished) {
           Navigator.of(context).pushReplacementNamed('/results');
+        } else if (state is VolleyCompleted) {
+          // Show leaderboard after volley completion
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const VolleyLeaderboardScreen(),
+            ),
+          );
         } else if (state is GameError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

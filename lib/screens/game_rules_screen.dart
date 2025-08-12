@@ -62,12 +62,7 @@ class GameRulesScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       final selectedGameType = _getGameTypeEnum(gameType);
-                      print('Starting game with type: $selectedGameType');
-                      BlocProvider.of<GameBloc>(context).add(
-                        InitializeGame(gameType: selectedGameType),
-                      );
-                      // Navigate directly to game setup
-                      print('Navigating to game setup with game type: $selectedGameType');
+                      // Navigate directly to game setup - initialization will be done there
                       Navigator.of(context).pushReplacementNamed(
                         '/game_setup',
                         arguments: selectedGameType,

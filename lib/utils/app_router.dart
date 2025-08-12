@@ -32,9 +32,15 @@ class AppRouter extends StatelessWidget {
           case '/game_selection':
             return MaterialPageRoute(builder: (_) => const GameSelectionScreen());
           case '/game_rules':
-            return MaterialPageRoute(builder: (_) => const GameRulesScreen());
+            return MaterialPageRoute(
+              builder: (_) => const GameRulesScreen(),
+              settings: settings,
+            );
           case '/game_setup':
-            return MaterialPageRoute(builder: (_) => const GameSetupScreen());
+            return MaterialPageRoute(
+              builder: (_) => const GameSetupScreen(),
+              settings: settings,
+            );
           case '/game':
             return MaterialPageRoute(builder: (_) => const GameScreen());
           case '/results':

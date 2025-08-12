@@ -19,15 +19,28 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
   bool _isSoloGame = false;
   GameType _selectedGameType = GameType.classica; // Default game type
   
+  bool _hasInitialized = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Check if game type was passed as argument
-    final args = ModalRoute.of(context)?.settings.arguments;
-    if (args is GameType) {
-      _selectedGameType = args;
-      _isSoloGame = args == GameType.solo;
-      // Don't initialize again - it's already done in GameRulesScreen
+    if (!_hasInitialized) {
+      _hasInitialized = true;
+      // Check if game type was passed as argument
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is GameType) {
+        _selectedGameType = args;
+        _isSoloGame = args == GameType.solo;
+        // Initialize the GameBloc with the correct game type
+        BlocProvider.of<GameBloc>(context).add(
+          InitializeGame(gameType: args),
+        );
+      } else {
+        // Initialize with default game type
+        BlocProvider.of<GameBloc>(context).add(
+          InitializeGame(gameType: _selectedGameType),
+        );
+      }
     }
   }
 
@@ -58,26 +71,16 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
   }
 
   void _submitSetup() {
-    final numParticipants = int.parse(_numParticipantsController.text);
-    final numVolleys = int.parse(_numVolleysController.text);
-    final participantNames = List.generate(numParticipants, (index) => 'Player ${index + 1}');
+    if (_formKey.currentState!.validate()) {
+      final numParticipants = int.parse(_numParticipantsController.text);
+      final numVolleys = int.parse(_numVolleysController.text);
 
-
-    
-    // Set up the game with the provided details
-    context.read<GameBloc>().add(
-          SetupGame(
-            numParticipants: numParticipants,
-            numVolleys: numVolleys,
-            participantNames: participantNames,
-          ),
-        );
-
-    // Set up name controllers
-    setState(() {
-      _setupStep = 1;
-      _initializeNameControllers(numParticipants);
-    });
+      // Set up name controllers and move to step 2
+      setState(() {
+        _setupStep = 1;
+        _initializeNameControllers(numParticipants);
+      });
+    }
   }
 
   void _submitNames() {
@@ -111,7 +114,6 @@ class _GameSetupScreenState extends State<GameSetupScreen> {
           );
         } else if (state is GameInProgress) {
           // Navigate to game screen when game is properly set up
-
           Navigator.of(context).pushReplacementNamed('/game');
         } else if (state is GameSetup) {
           // Update the UI when game type is set

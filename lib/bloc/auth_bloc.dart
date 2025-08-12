@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/supabase_config.dart';
 import '../utils/auth_error_handler.dart';
+import '../utils/storage_service.dart';
 import '../l10n/app_localizations.dart';
 
 // Events
@@ -116,24 +117,71 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<PasswordResetRequested>(_onPasswordResetRequested);
   }
 
+  Future<void> _saveUserData(String id, String name, String email) async {
+    await StorageService.saveUserData(id, name, email);
+  }
+
+  Future<Map<String, String>?> _getSavedUserData() async {
+    return await StorageService.getUserData();
+  }
+
+  Future<void> _clearUserData() async {
+    await StorageService.clearUserData();
+  }
+
   Future<void> _onCheckAuthStatus(
     CheckAuthStatus event,
     Emitter<AuthState> emit,
   ) async {
+    print('DEBUG: CheckAuthStatus called');
     emit(AuthLoading());
     try {
       final user = _supabase.auth.currentUser;
+      print('DEBUG: Current user: ${user?.id}');
       if (user != null) {
+        final name = user.userMetadata?['name'] ?? user.email?.split('@')[0] ?? 'Utente';
+        final email = user.email ?? '';
+        
+        // Salva i dati per uso offline
+        await _saveUserData(user.id, name, email);
+        print('DEBUG: User data saved for offline use');
+        
         emit(Authenticated(
           id: user.id,
-          name: user.userMetadata?['name'] ?? user.email?.split('@')[0] ?? 'Utente',
-          email: user.email ?? '',
+          name: name,
+          email: email,
         ));
       } else {
-        emit(Unauthenticated());
+        // Se non c'è utente online, controlla i dati salvati
+        final savedData = await StorageService.getUserData();
+        print('DEBUG: Saved data: $savedData');
+        if (savedData != null) {
+          print('DEBUG: Using saved data for authentication');
+          emit(Authenticated(
+            id: savedData['id']!,
+            name: savedData['name']!,
+            email: savedData['email']!,
+          ));
+        } else {
+          print('DEBUG: No saved data, emitting Unauthenticated');
+          emit(Unauthenticated());
+        }
       }
     } catch (e) {
-      emit(Unauthenticated());
+      print('DEBUG: Error in CheckAuthStatus: $e');
+      // In caso di errore di connessione, usa i dati salvati
+      final savedData = await StorageService.getUserData();
+      if (savedData != null) {
+        print('DEBUG: Using saved data after error');
+        emit(Authenticated(
+          id: savedData['id']!,
+          name: savedData['name']!,
+          email: savedData['email']!,
+        ));
+      } else {
+        print('DEBUG: No saved data after error, emitting Unauthenticated');
+        emit(Unauthenticated());
+      }
     }
   }
 
@@ -141,6 +189,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LoginRequested event,
     Emitter<AuthState> emit,
   ) async {
+    print('DEBUG: Login requested for ${event.email}');
     emit(AuthLoading());
     try {
       final response = await _supabase.auth.signInWithPassword(
@@ -149,17 +198,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       
       final user = response.user;
+      print('DEBUG: Login response user: ${user?.id}');
       if (user != null) {
+        final name = user.userMetadata?['name'] ?? user.email?.split('@')[0] ?? 'Utente';
+        final email = user.email ?? '';
+        
+        // Salva i dati per uso offline
+        await _saveUserData(user.id, name, email);
+        print('DEBUG: User data saved after login: id=${user.id}, name=$name, email=$email');
+        
         emit(Authenticated(
           id: user.id,
-          name: user.userMetadata?['name'] ?? user.email?.split('@')[0] ?? 'Utente',
-          email: user.email ?? '',
+          name: name,
+          email: email,
         ));
       } else {
+        print('DEBUG: Login failed - no user returned');
         final errorMessage = AuthErrorHandler.getLocalizedErrorMessage('login failed', localizations);
         emit(AuthError(message: errorMessage));
       }
     } catch (e) {
+      print('DEBUG: Login error: $e');
       final errorMessage = AuthErrorHandler.getLocalizedErrorMessage(e.toString(), localizations);
       emit(AuthError(message: errorMessage));
     }
@@ -169,6 +228,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     RegisterRequested event,
     Emitter<AuthState> emit,
   ) async {
+    print('DEBUG: Registration requested for ${event.email}');
     emit(AuthLoading());
     try {
       final response = await _supabase.auth.signUp(
@@ -178,17 +238,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       
       final user = response.user;
+      print('DEBUG: Registration response user: ${user?.id}');
       if (user != null) {
+        final email = user.email ?? '';
+        
+        // Salva i dati per uso offline
+        await _saveUserData(user.id, event.name, email);
+        print('DEBUG: User data saved after registration: id=${user.id}, name=${event.name}, email=$email');
+        
         emit(Authenticated(
           id: user.id,
           name: event.name,
-          email: user.email ?? '',
+          email: email,
         ));
       } else {
+        print('DEBUG: Registration failed - no user returned');
         final errorMessage = AuthErrorHandler.getLocalizedErrorMessage('registration failed', localizations);
         emit(AuthError(message: errorMessage));
       }
     } catch (e) {
+      print('DEBUG: Registration error: $e');
       final errorMessage = AuthErrorHandler.getLocalizedErrorMessage(e.toString(), localizations);
       emit(AuthError(message: errorMessage));
     }
@@ -201,10 +270,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       await _supabase.auth.signOut();
+      await _clearUserData();
       emit(Unauthenticated());
     } catch (e) {
-      final errorMessage = AuthErrorHandler.getLocalizedErrorMessage(e.toString(), localizations);
-      emit(AuthError(message: errorMessage));
+      // Anche se il logout online fallisce, cancella i dati locali
+      await _clearUserData();
+      emit(Unauthenticated());
     }
   }
 

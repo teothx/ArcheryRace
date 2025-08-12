@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -60,37 +61,43 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   // Action buttons
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Row(
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushReplacementNamed('/home');
-                            },
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                        // Leaderboard button
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushReplacementNamed('/home');
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: const Text('Torna alla Home'),
                               ),
                             ),
-                            child: const Text('Torna alla Home'),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _saveResults(state);
-                              _showResultsSavedDialog();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  _saveResults(state);
+                                  _showResultsSavedDialog();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: const Text('Salva Risultati'),
                               ),
                             ),
-                            child: const Text('Salva Risultati'),
-                          ),
+                          ],
                         ),
                       ],
                     ),
@@ -205,15 +212,17 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
+                      interval: 1,
                       getTitlesWidget: (value, meta) {
-                        return Text('Volée ${value.toInt() + 1}');
+                        final volleyNumber = value.toInt() + 1;
+                        return Text('Volée $volleyNumber');
                       },
                     ),
                   ),
                 ),
                 borderData: FlBorderData(show: true),
                 minX: 0,
-                maxX: (state.scores[state.participantNames.first]?.length ?? 1) - 1.0,
+                maxX: math.max(0, (state.scores[state.participantNames.first]?.length ?? 1) - 1).toDouble(),
                 minY: 0,
                 lineBarsData: state.participantNames.map((participant) {
                   final scores = state.scores[participant] ?? [];
@@ -297,4 +306,6 @@ class _ResultsScreenState extends State<ResultsScreen> {
       ),
     );
   }
+
+
 }
